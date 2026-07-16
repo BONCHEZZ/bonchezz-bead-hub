@@ -11,12 +11,15 @@ RUN apt-get update \
 
 COPY . /tmp/build-context
 
-RUN if [ -f /tmp/build-context/requirements.txt ]; then \
+RUN if [ -f /tmp/build-context/backend/requirements.txt ]; then \
+        cp /tmp/build-context/backend/requirements.txt /app/requirements.txt; \
+        cp -r /tmp/build-context/backend/. /app/; \
+    elif [ -f /tmp/build-context/requirements.txt ]; then \
         cp /tmp/build-context/requirements.txt /app/requirements.txt; \
+        cp -r /tmp/build-context/. /app/; \
     else \
         echo "requirements.txt not found"; exit 1; \
     fi && \
-    cp -r /tmp/build-context/. /app/ && \
     rm -rf /tmp/build-context
 
 RUN pip install --no-cache-dir -r requirements.txt && chmod +x /app/docker-entrypoint.sh
