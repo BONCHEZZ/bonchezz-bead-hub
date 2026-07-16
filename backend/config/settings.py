@@ -120,6 +120,10 @@ def _normalize_cors_origins(raw_value: str):
 cors_default = 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080,http://localhost:8081,http://127.0.0.1:8081,http://localhost:8082,http://127.0.0.1:8082,http://192.168.56.1:8082,http://192.168.100.11:8082,https://bonchezz-bead-hub.onrender.com,https://bonchezz-bead-hub-backend.onrender.com'
 raw_cors_origins = config('CORS_ALLOWED_ORIGINS', default=cors_default)
 CORS_ALLOWED_ORIGINS = _normalize_cors_origins(raw_cors_origins)
+CORS_ALLOWED_ORIGINS = [
+    origin for origin in CORS_ALLOWED_ORIGINS
+    if origin not in {'', 'https://bonchezz-bead-hub.vercel.app', 'https://bonchezz-bead-hub-backend.onrender.com'}
+]
 CORS_ALLOWED_ORIGINS.extend([
     'https://bonchezz-bead-hub.vercel.app',
     'https://bonchezz-bead-hub-backend.onrender.com',
@@ -128,6 +132,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [r'^https://.*\.vercel\.app$', r'^https://.*\.onre
 extra_cors_regexes = config('CORS_ALLOWED_ORIGIN_REGEXES', default='', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
 CORS_ALLOWED_ORIGIN_REGEXES.extend(extra_cors_regexes)
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 ROOT_URLCONF = 'config.urls'
 
