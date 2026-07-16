@@ -11,7 +11,7 @@ RUN apt-get update \
 
 COPY . /tmp/build-context
 
-RUN if [ -f /tmp/build-context/backend/requirements.txt ]; then \
+RUN if [ -d /tmp/build-context/backend ]; then \
         cp /tmp/build-context/backend/requirements.txt /app/requirements.txt; \
         cp -r /tmp/build-context/backend/. /app/; \
     elif [ -f /tmp/build-context/requirements.txt ]; then \
