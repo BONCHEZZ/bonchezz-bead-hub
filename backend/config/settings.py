@@ -153,8 +153,6 @@ database_config = dj_database_url.config(
 )
 
 if database_config:
-    database_config.setdefault('OPTIONS', {})
-    database_config['OPTIONS'].setdefault('init_command', 'SET search_path TO public;')
     DATABASES = {'default': database_config}
 else:
     DATABASES = {

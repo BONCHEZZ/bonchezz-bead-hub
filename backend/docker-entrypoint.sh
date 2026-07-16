@@ -1,7 +1,6 @@
 #!/bin/sh
 set -eu
 
-python manage.py shell -c "from django.db import connection; connection.cursor().execute('SET search_path TO public;')"
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 
