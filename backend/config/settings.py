@@ -33,7 +33,11 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-only-change-in-pr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=lambda v: str(v).lower() not in {'false', '0', 'no', 'off', 'release', 'production'})
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.onrender.com', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
+hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.onrender.com', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
+render_host = config('RENDER_EXTERNAL_HOSTNAME', default='')
+if render_host:
+    hosts.append(render_host)
+ALLOWED_HOSTS = hosts
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 SESSION_COOKIE_SECURE = not DEBUG
@@ -97,7 +101,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080,http://localhost:8081,http://127.0.0.1:8081,http://localhost:8082,http://127.0.0.1:8082,http://192.168.56.1:8082,http://192.168.100.11:8082', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080,http://localhost:8081,http://127.0.0.1:8081,http://localhost:8082,http://127.0.0.1:8082,http://192.168.56.1:8082,http://192.168.100.11:8082,https://bonchezz-bead-hub.onrender.com',
+    cast=lambda v: [s.strip() for s in v.split(',') if s.strip()]
+)
 CORS_ALLOWED_ORIGIN_REGEXES = [r'^https://.*\.vercel\.app$', r'^https://.*\.onrender\.com$']
 extra_cors_regexes = config('CORS_ALLOWED_ORIGIN_REGEXES', default='', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
 CORS_ALLOWED_ORIGIN_REGEXES.extend(extra_cors_regexes)
