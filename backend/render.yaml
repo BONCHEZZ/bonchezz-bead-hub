@@ -10,7 +10,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.12.0
       - key: DATABASE_URL
-        value: postgresql://<your-neon-user>:<your-neon-password>@<your-neon-host>/<your-neon-database>?sslmode=require&channel_binding=require
+        value: postgresql://neondb_owner:npg_EtidALbVs5x6@ep-shiny-glitter-auet9yug-pooler.c-10.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
       - key: SECRET_KEY
         value: django-insecure-production-change-me
       - key: DEBUG
