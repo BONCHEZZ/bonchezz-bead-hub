@@ -101,11 +101,27 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = config(
+def _normalize_cors_origins(raw_value: str):
+    origins = []
+    for item in raw_value.split(','):
+        origin = item.strip()
+        if not origin:
+            continue
+        if origin.startswith('https://https://'):
+            origin = origin.replace('https://https://', 'https://', 1)
+        if origin.startswith('http://http://'):
+            origin = origin.replace('http://http://', 'http://', 1)
+        if origin.endswith('/'):
+            origin = origin[:-1]
+        if origin not in origins:
+            origins.append(origin)
+    return origins
+
+CORS_ALLOWED_ORIGINS = _normalize_cors_origins(config(
     'CORS_ALLOWED_ORIGINS',
     default='http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080,http://localhost:8081,http://127.0.0.1:8081,http://localhost:8082,http://127.0.0.1:8082,http://192.168.56.1:8082,http://192.168.100.11:8082,https://bonchezz-bead-hub.onrender.com',
-    cast=lambda v: [s.strip() for s in v.split(',') if s.strip()]
-)
+    default=''
+))
 CORS_ALLOWED_ORIGIN_REGEXES = [r'^https://.*\.vercel\.app$', r'^https://.*\.onrender\.com$']
 extra_cors_regexes = config('CORS_ALLOWED_ORIGIN_REGEXES', default='', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
 CORS_ALLOWED_ORIGIN_REGEXES.extend(extra_cors_regexes)
