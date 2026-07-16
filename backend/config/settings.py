@@ -147,15 +147,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # Use PostgreSQL when DATABASE_URL is provided, otherwise fall back to SQLite for local dev
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=None),
-        conn_max_age=600,
-    ) or {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
+database_config = dj_database_url.config(
+    default=config('DATABASE_URL', default=None),
+    conn_max_age=600,
+)
+
+if database_config:
+    database_config.setdefault('OPTIONS', {})
+    database_config['OPTIONS'].setdefault('options', '-c search_path=public')
+    DATABASES = {'default': database_config}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': str(BASE_DIR / 'db.sqlite3'),
+        }
     }
-}
+
 AUTH_USER_MODEL = 'accounts.User'
 
 
