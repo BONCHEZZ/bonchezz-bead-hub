@@ -39,7 +39,7 @@ export default defineConfig(({ command }) => ({
     }),
     // Nitro only needs to run at build time; pick the preset that matches
     // your deploy target (e.g. "node-server", "vercel", "netlify", "cloudflare-module").
-    ...(command === "build" ? [nitro({ preset: "node-server" })] : []),
+    ...(command === "build" ? [nitro({ preset: process.env.VERCEL ? "vercel" : "node-server" })] : []),
     viteReact(),
   ],
 }));

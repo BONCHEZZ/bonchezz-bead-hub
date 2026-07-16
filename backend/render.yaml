@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: bonchezz-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DATABASE_URL
+        value: postgresql://<your-neon-user>:<your-neon-password>@<your-neon-host>/<your-neon-database>?sslmode=require&channel_binding=require
+      - key: SECRET_KEY
+        value: django-insecure-production-change-me
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: bonchezz-backend.onrender.com,localhost,127.0.0.1
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://bonchezz-frontend.vercel.app,http://localhost:5173,http://127.0.0.1:5173
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.smtp.EmailBackend
+      - key: EMAIL_HOST
+        value: in-v3.mailjet.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_HOST_USER
+        value: your-mailjet-api-key
+      - key: EMAIL_HOST_PASSWORD
+        value: your-mailjet-secret-key
+      - key: EMAIL_USE_TLS
+        value: "True"
+      - key: DEFAULT_FROM_EMAIL
+        value: bonchederrick@gmail.com
+      - key: SMS_PROVIDER
+        value: twilio
+      - key: TWILIO_ACCOUNT_SID
+        value: your-twilio-account-sid
+      - key: TWILIO_AUTH_TOKEN
+        value: your-twilio-auth-token
+      - key: TWILIO_FROM_NUMBER
+        value: +19786431085
