@@ -5,4 +5,4 @@ python manage.py shell -c "import os; from urllib.parse import urlparse; url=os.
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 
-exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers "${GUNICORN_WORKERS:-3}"
+exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers "${GUNICORN_WORKERS:-3}"
