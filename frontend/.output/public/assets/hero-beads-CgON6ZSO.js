@@ -1,0 +1,1 @@
+var e=`/assets/hero-beads-CWqlINKl.jpg`;export{e as t};
