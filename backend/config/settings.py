@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-from urllib.parse import urlparse
+import dj_database_url
 from decouple import config
 
 try:
@@ -146,39 +146,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# Use PostgreSQL when DATABASE_URL or DB_* vars are provided, otherwise fall back to SQLite for local dev
-DATABASE_URL = config('DATABASE_URL', default=None)
-DB_NAME = config('DB_NAME', default=None)
-if DATABASE_URL:
-    parsed = urlparse(DATABASE_URL)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': parsed.path.lstrip('/'),
-            'USER': parsed.username or '',
-            'PASSWORD': parsed.password or '',
-            'HOST': parsed.hostname or '127.0.0.1',
-            'PORT': str(parsed.port or 5432),
-        }
+# Use PostgreSQL when DATABASE_URL is provided, otherwise fall back to SQLite for local dev
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default=None),
+        conn_max_age=600,
+    ) or {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
-elif DB_NAME:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': DB_NAME,
-            'USER': config('DB_USER', default=''),
-            'PASSWORD': config('DB_PASSWORD', default=''),
-            'HOST': config('DB_HOST', default='127.0.0.1'),
-            'PORT': config('DB_PORT', default='5432'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': str(BASE_DIR / 'db.sqlite3'),
-        }
-    }
+}
 AUTH_USER_MODEL = 'accounts.User'
 
 
