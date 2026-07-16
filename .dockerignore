@@ -1,0 +1,13 @@
+git
+.github
+frontend
+backend/media
+backend/myEnv
+backend/db.sqlite3
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.mypy_cache
+**/node_modules
+.env
+.env.*
