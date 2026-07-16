@@ -44,9 +44,13 @@ function Shop() {
 
   useEffect(() => {
     async function load() {
-      const [categoryData, productData] = await Promise.all([getCategories(), getProducts()]);
-      setCategories(categoryData.filter((c) => c.is_active));
-      setProducts(productData.results);
+      try {
+        const [categoryData, productData] = await Promise.all([getCategories(), getProducts()]);
+        setCategories(categoryData.filter((c) => c.is_active));
+        setProducts(productData.results);
+      } catch (error) {
+        console.error("Shop page data load failed", error);
+      }
     }
 
     void load();

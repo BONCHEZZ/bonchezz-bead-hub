@@ -58,12 +58,16 @@ function Home() {
 
   useEffect(() => {
     async function load() {
-      const [categoryData, productData] = await Promise.all([
-        getCategories(),
-        getProducts({ featured: "true" }),
-      ]);
-      setCategories(categoryData.filter((c) => c.is_active));
-      setFeatured(productData.results.slice(0, 4));
+      try {
+        const [categoryData, productData] = await Promise.all([
+          getCategories(),
+          getProducts({ featured: "true" }),
+        ]);
+        setCategories(categoryData.filter((c) => c.is_active));
+        setFeatured(productData.results.slice(0, 4));
+      } catch (error) {
+        console.error("Home page data load failed", error);
+      }
     }
 
     void load();
