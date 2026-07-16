@@ -147,13 +147,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # Use PostgreSQL when DATABASE_URL is provided, otherwise fall back to SQLite for local dev
-database_config = dj_database_url.config(
-    default=config('DATABASE_URL', default=None),
-    conn_max_age=600,
-)
+DATABASE_URL = os.getenv('DATABASE_URL') or config('DATABASE_URL', default=None)
 
-if database_config:
-    DATABASES = {'default': database_config}
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600),
+    }
 else:
     DATABASES = {
         'default': {
